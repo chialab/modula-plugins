@@ -1,0 +1,47 @@
+{
+	"$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+	"name": "modula",
+	"version": "1.0.0",
+	"description": "Create and edit interactive lessons, stories, maps and exercises in chat. Review blocks in the editor and get complete HTML documents to present, reopen and publish wherever you choose.",
+	"author": {
+		"name": "Chialab"
+	},
+	"homepage": "https://modula.dev",
+	"keywords": [
+		"modula",
+		"interactive-content",
+		"education",
+		"publishing"
+	],
+	"extensions": {
+		"com.openai": {
+			"interface": {
+				"displayName": "Modula",
+				"shortDescription": "Author interactive content",
+				"longDescription": "Describe what you want to make and provide your text, images and data. Your assistant drafts lessons, stories, maps and exercises with Modula blocks. Review and edit blocks visually in chat: when you save or close the editor, your assistant presents the result as a complete HTML document, as an artifact where your chat app supports it. View it in a browser, reopen it in the Modula editor, publish it or embed its content on your own website, or export a SCORM package for your LMS.",
+				"developerName": "Chialab",
+				"category": "Creativity",
+				"capabilities": [
+					"Interactive"
+				],
+				"logo": "./assets/icon.png",
+				"composerIcon": "./assets/icon.png",
+				"websiteURL": "https://modula.dev",
+				"supportURL": "https://modula.dev/contact",
+				"privacyPolicyURL": "https://modula.dev/privacy",
+				"termsOfServiceURL": "https://modula.dev/terms",
+				"defaultPrompt": [
+					"Create an interactive lesson about the solar system with a short quiz, then save it as an HTML document.",
+					"Make an interactive timeline of the Roman emperors and show it to me.",
+					"Open my Modula HTML document and help me review and edit its content."
+				]
+			},
+			"publication": {
+				"release_notes": "Initial public plugin package: Modula document authoring and visual review, editing existing HTML documents, explicit fragment embedding, and SCORM 2004 export through the Modula MCP connection.",
+				"countries": [
+					"IT"
+				]
+			}
+		}
+	}
+}

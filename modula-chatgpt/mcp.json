@@ -1,0 +1,22 @@
+{
+	"$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
+	"mcpServers": {
+		"modula": {
+			"type": "streamable-http",
+			"url": "https://modula.dev/mcp",
+			"extensions": {
+				"com.openai": {
+					"auth": {
+						"type": "oauth",
+						"client": {
+							"mode": "provided",
+							"clientId": "client_chatgpt",
+							"tokenEndpointAuthMethod": "none"
+						},
+						"baseScopes": ["modula:mcp:tools"]
+					}
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,8 @@
+{
+	"mcpServers": {
+		"modula": {
+			"type": "http",
+			"url": "https://modula.dev/mcp"
+		}
+	}
+}
