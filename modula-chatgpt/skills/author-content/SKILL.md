@@ -29,53 +29,61 @@ embedding.
    in reading order. For revisions, include the existing block ids in the design.
 4. For a document, pass the design tokens and data directly to `edit_document`
    with a title and `insert` changes (and `isNew` for content the user has not
-   seen yet); do not write each block with `edit_block` first. The document
-   opens in the editor widget: Save and close, Reject (with `isNew`) or Cancel.
-   A message from the user follows: then present the latest file as it is, as
-   an artifact if the host supports them, otherwise as a file; after a
-   rejection, drop it and ask what to change. Retain the returned source for
-   later changes.
+   seen yet); do not write each block with `render_block` first. When creating
+   a document, consider passing a `theme` in this first call. A single accent
+   colour suited to the content or the user's palette can be enough. The result
+   names the document by a `document` id: Modula keeps the document, so pass
+   that id with later changes, never the document itself. The document opens in
+   the editor widget: Save and close, Reject (with `isNew`) or Cancel. Your
+   context says what the user changed there; `get_document` with `blocks` reads
+   their current data. Where the host allows it, the user downloads the file
+   from the editor and no message follows. When a message asks you for the
+   file, call `get_document` and present the file as it is, as an artifact if
+   the host supports them, otherwise as a file; after a rejection, drop the
+   document and ask what to change. To edit fields of an existing block with
+   the same structure, pass `{ replace: id, data: changedFields }` without a
+   token. Supply changed arrays in full. If a change is answered with the
+   current data of a block (the user edited it), apply your change to that data
+   and call again.
 5. Only for a custom page or embedding, write one block per call, never several,
-   with that block's token and data matching its exact schema: the first block
-   with `review_block`, which opens it in the editor widget, the others with
-   `edit_block`, which opens none. To review several blocks, open them one at a
-   time with `review_block` and `pendingReviews` (the blocks you open after it):
-   the message after each save or close asks for the next. Put the returned
-   HTML fragment in the page and keep the returned block metadata beside it,
-   with its updated token; inspect validation reports before proceeding. The
-   latest token of a block rewrites it; call `design_blocks` with its id only to
-   change its structure. Never present on its own a block of a larger page.
+   with that block's token and data matching its exact schema, using
+   `render_block`, which opens no editor. Put the returned HTML fragment in the
+   page and keep the returned block metadata beside it, with its updated token;
+   inspect validation reports before proceeding. The latest token of a block
+   rewrites it; call `design_blocks` with its id only to change its structure.
+   Never present on its own a block of a larger page.
 6. When the custom page is done, call `get_script` with the latest token of every
    block in it and follow its delivery instructions: the page loads that one
    script.
 
 For a learning management system, use the latest fragments and tokens. When
-starting from a document, get them with `extract_blocks` using its latest source.
+starting from a document, get them with `extract_blocks` using its `document` id.
 Build the package page from those fragments and call `export_scorm` with every
 latest block token and `title` (and `masteryScore` when asked), following its
 packaging instructions. Never copy HTML out of a document or hand-write SCORM files.
 
-Use `get_theming_instructions` for requested styling. `save_document` is called
-by the editor widget, not by the model.
+Use `get_theming_instructions` for requested styling. `load_document` and
+`save_document` are called by the editor widget, not by the model.
 
 ## Open and deliver documents
 
-- To edit an existing Modula document, read the supplied HTML file through the
-  host's file tools (or another connector) and pass its source (the head of the
-  file, up to `</head>`) to `edit_document` with the changes (`replace`,
-  `insert`, `order`). The tool accepts HTML text, not a path or URL. It returns
-  the complete updated file as an attached resource, to save or deliver as it
-  is, and the new source in its text for the next change. Without changes it
-  opens the document in the editor.
+- To edit a Modula document the user attaches, read the supplied HTML file
+  through the host's file tools (or another connector) and pass it once to
+  `edit_document` as `html` (the whole file, or its head up to `</head>`),
+  with the changes if any (`replace`, `insert`, `order`). The tool accepts HTML
+  text, not a path or URL. Its result names the document by a `document` id:
+  use that id from then on.
 - To create a new document, call `edit_document` with a title and `insert`
   changes.
-- To use blocks of a document in another page, pass its source to
-  `extract_blocks` (with `ids` for some of them): it returns each block's
-  fragment and metadata with its token, for `get_script`. Never copy HTML out
-  of a file.
-- `edit_document` returns file contents; it does not write to disk or persist a
-  document on the server. Report a saved file or published page only after the
-  corresponding action succeeds.
+- To deliver a document, call `get_document` with its id: it attaches the
+  complete file, to save or deliver as it is.
+- To use blocks of a document in another page, pass its id to `extract_blocks`
+  (with `ids` for some of them): it returns each block's fragment and metadata
+  with its token, for `get_script`. Never copy HTML out of a file.
+- Modula keeps a working copy of a document for 7 days after its last use, not
+  a hosted document: when a call answers that a document is no longer
+  available, ask the user to attach its file. Report a saved file or published
+  page only after the corresponding action succeeds.
 
 Use `submit_support_ticket` only when the user asks to contact Modula support;
 include the relevant issue and avoid credentials or unrelated personal data.

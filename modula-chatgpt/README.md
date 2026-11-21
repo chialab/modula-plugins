@@ -29,7 +29,7 @@ Modula account through the host's connection flow. The manifest uses a public OA
 client without a client secret; no credentials belong in this package.
 
 The assistant sends to Modula only what a request needs: the text, data and Modula
-HTML documents you ask it to author, edit or export. Available block types and
+HTML documents you ask it to author, edit or export. Modula keeps an encrypted working copy for seven days after its last use. Download the HTML file to keep a copy. Available block types and
 variants depend on your Modula account. See the
 [privacy policy](https://modula.dev/privacy) and [terms](https://modula.dev/terms).
 
