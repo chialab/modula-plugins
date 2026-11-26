@@ -1,47 +1,96 @@
 {
-	"$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
-	"name": "modula",
-	"version": "1.0.0",
-	"description": "Create and edit interactive lessons, stories, maps and exercises in chat. Review blocks in the editor and get complete HTML documents to present, reopen and publish wherever you choose.",
-	"author": {
-		"name": "Chialab"
-	},
-	"homepage": "https://modula.dev",
-	"keywords": [
-		"modula",
-		"interactive-content",
-		"education",
-		"publishing"
-	],
-	"extensions": {
-		"com.openai": {
-			"interface": {
-				"displayName": "Modula",
-				"shortDescription": "Author interactive content",
-				"longDescription": "Describe what you want to make and provide your text, images and data. Your assistant drafts lessons, stories, maps and exercises with Modula blocks. Review and edit blocks visually in chat: when you save or close the editor, your assistant presents the result as a complete HTML document, as an artifact where your chat app supports it. View it in a browser, reopen it in the Modula editor, publish it or embed its content on your own website, or export a SCORM package for your LMS.",
-				"developerName": "Chialab",
-				"category": "Creativity",
-				"capabilities": [
-					"Interactive"
-				],
-				"logo": "./assets/icon.png",
-				"composerIcon": "./assets/icon.png",
-				"websiteURL": "https://modula.dev",
-				"supportURL": "https://modula.dev/contact",
-				"privacyPolicyURL": "https://modula.dev/privacy",
-				"termsOfServiceURL": "https://modula.dev/terms",
-				"defaultPrompt": [
-					"Create an interactive lesson about the solar system with a short quiz, then save it as an HTML document.",
-					"Make an interactive timeline of the Roman emperors and show it to me.",
-					"Open my Modula HTML document and help me review and edit its content."
-				]
-			},
-			"publication": {
-				"release_notes": "Initial public plugin package: Modula document authoring and visual review, editing existing HTML documents, explicit fragment embedding, and SCORM 2004 export through the Modula MCP connection.",
-				"countries": [
-					"IT"
-				]
-			}
-		}
-	}
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "modula",
+  "version": "1.0.1",
+  "description": "Create and edit interactive lessons, stories, maps and exercises in chat. Review blocks in the editor and get complete HTML documents to present, reopen and publish wherever you choose.",
+  "author": {
+    "name": "Chialab"
+  },
+  "homepage": "https://modula.dev",
+  "keywords": ["modula", "interactive-content", "education", "publishing"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Modula",
+        "shortDescription": "Author interactive content",
+        "longDescription": "Describe what you want to make and provide your text, images and data. Your assistant drafts lessons, stories, maps and exercises with Modula blocks. Follow the document as it takes shape in the editor, edit blocks visually, and use undo to take back changes. Save the latest version in your conversation as a complete HTML file, as an artifact where your chat app supports it. Reopen the file in Modula, publish it on your own website, embed its blocks, or export a SCORM 2004 package for your LMS. Modula keeps a temporary, encrypted working copy for one day after its last use; the file you save is the lasting copy.",
+        "developerName": "Chialab",
+        "category": "Creativity",
+        "capabilities": ["Interactive"],
+        "logo": "./assets/icon.png",
+        "composerIcon": "./assets/icon.png",
+        "websiteURL": "https://modula.dev",
+        "supportURL": "https://modula.dev/contact",
+        "privacyPolicyURL": "https://modula.dev/privacy",
+        "termsOfServiceURL": "https://modula.dev/terms",
+        "defaultPrompt": [
+          "Create an interactive lesson about the solar system with a short quiz, then save it as an HTML document.",
+          "Make an interactive timeline of the Roman emperors and show it to me.",
+          "Open my Modula HTML document and help me review and edit its content."
+        ]
+      },
+      "review": {
+        "demo_recording_url": "https://drive.google.com/file/d/1SndyTJeejLyhYnfH4YFznXkwNc8ZhF9I/view",
+        "prompts": [
+          "Create a short interactive lesson about the water cycle with an introduction, three flashcards and three multiple-choice questions with feedback. Do not add images. Give me an editable HTML document.",
+          "Make one text block saying “Welcome to the water cycle lesson.” Give me an editable Modula HTML document with no other blocks.",
+          "In the lesson we just created, replace only the introduction with “Water moves continuously between the atmosphere, land and oceans.” Keep all flashcards and questions unchanged."
+        ],
+        "test_cases": {
+          "positive": [
+            {
+              "description": "Create a complete lesson with Free-plan blocks. Setup: sign in to a dedicated test account; no external media or attachments. Inspect the lesson in the editor and save its latest version in the chat.",
+              "prompt": "Create a short interactive lesson about the water cycle with an introduction, three flashcards and three multiple-choice questions with feedback. Do not add images. Give me an editable HTML document.",
+              "tools_triggered": "get_schema_instructions, design_document, edit_document, write_document, get_document",
+              "expected_behavior": "Call get_schema_instructions with schema=lesson. Design the document with design_document, a title and available text, flashcards and exercise blocks; open it with edit_document, then write the blocks with write_document and schema-valid data, a few per call. The editor must show the document as it is written. Before the assistant turn ends, call get_document with the document id and deliver the attached text/html resource unchanged, including its inline script and all requested content. The HTML must open in a browser and reopen in the editor. Do not claim the document is hosted or published."
+            },
+            {
+              "description": "Create exactly one block as a document. Setup: authenticated Free test account; no previous document needed.",
+              "prompt": "Make one text block saying “Welcome to the water cycle lesson.” Give me an editable Modula HTML document with no other blocks.",
+              "tools_triggered": "design_document, edit_document, get_document",
+              "expected_behavior": "Skip get_schema_instructions for this single block. Design one text block with its schema-valid data in one design_document call, then open it with edit_document. Call get_document before the assistant turn ends and return the complete attached HTML unchanged, containing exactly that one block and its inline script. Do not add a gallery, quiz or extra section."
+            },
+            {
+              "description": "Edit an existing document and preserve the rest. Setup: in the same conversation, first create the water-cycle lesson from positive case 1; retain its document id and the block ids, data and order. Ask for the edit while the editor is open.",
+              "prompt": "In the lesson we just created, replace only the introduction with “Water moves continuously between the atmosphere, land and oceans.” Keep all flashcards and questions unchanged.",
+              "tools_triggered": "write_document, get_document",
+              "expected_behavior": "Use write_document with the document id and a replace change for the introduction block id, with the changed fields; never send the document itself. Use design_document with that id only if a new design is needed. Preserve all other block ids, content and order. Keep the existing editor open and show the change there. Before the assistant turn ends, call get_document and deliver the attached file unchanged. The new introduction must appear and the original flashcards and questions must remain."
+            },
+            {
+              "description": "Create separate fragments only for an explicit embedding request. Setup: authenticated Free account; no existing document or media needed.",
+              "prompt": "I am building my own website layout. Give me one embeddable interactive flashcard with “Evaporation” on the front and “Liquid water becomes water vapour.” on the back, plus its runtime script. I only need the fragments for my website, not a complete HTML file.",
+              "tools_triggered": "design_document, get_document",
+              "expected_behavior": "Design one available flashcards block with its data with design_document, then call get_document with format=fragments. Deliver the attached fragment unchanged and the script resource link with its download and embedding instructions. Do not fetch the runtime script into the conversation. The card must reveal its back when activated. Do not open the editor or claim the website was deployed."
+            },
+            {
+              "description": "Export a document with an exercise to SCORM. Setup: in this conversation first create the lesson from positive case 1. Use a SCORM 2004-compatible test LMS for import verification.",
+              "prompt": "Export the water cycle lesson we just created for my SCORM 2004 learning platform. Title it “Water cycle” and set the passing score to 80%.",
+              "tools_triggered": "get_document",
+              "expected_behavior": "Call get_document with the document id, format=scorm, title=\"Water cycle\" and masteryScore=0.8; the lesson includes at least one exercise. Deliver the attached zip unchanged as a file; do not unpack it, copy HTML out of the document or write SCORM files. Check that the package imports into the test LMS with the title \"Water cycle\", tracks the exercises and passes at 80%."
+            }
+          ],
+          "negative": [
+            {
+              "description": "Unsupported hosting: Modula returns files and scripts and does not deploy websites. No Modula tool should be called for this request; explain that external hosting is needed and do not invent a public URL.",
+              "prompt": "Publish my existing HTML file on Modula hosting and give me its permanent public URL. Do not edit or regenerate the file."
+            },
+            {
+              "description": "Unsupported purchase: none of the tools can charge a card, activate a subscription or change billing. Explain that the account website handles plan enquiries; do not invoke any Modula tool, including submit_support_ticket, or claim payment succeeded.",
+              "prompt": "Upgrade my Modula account to Pro and charge my saved card now. Do not create content or contact support."
+            },
+            {
+              "description": "Unsupported learner analytics: the tools do not query an LMS or track learners. Explain that learner results must come from the LMS or its connector. Do not call Modula tools or fabricate learners, scores or a report.",
+              "prompt": "Show which students completed my published Modula lesson yesterday and list their scores. Do not create or modify any lesson."
+            }
+          ]
+        },
+        "commerce": false,
+        "commerce_description": "The plugin works with a free Modula account and does not sell products, process payments or require purchases. An optional Pro plan is available outside the plugin; the plugin does not ask users to buy it."
+      },
+      "publication": {
+        "release_notes": "Updated document authoring: design the structure, write blocks progressively, edit the live document and deliver its latest file. Includes media and place search, HTML pages, embeddable fragments and SCORM 2004 export. Working copies are encrypted and expire one day after their last use.",
+        "countries": ["IT"]
+      }
+    }
+  }
 }

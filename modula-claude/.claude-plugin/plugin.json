@@ -1,14 +1,11 @@
 {
-	"name": "modula",
-	"version": "1.0.0",
-	"description": "Create and edit interactive lessons, stories, maps and exercises in chat. Review blocks in the editor and get complete HTML documents to present, reopen and publish wherever you choose.",
-	"author": {
-		"name": "Chialab"
-	},
-	"homepage": "https://modula.dev",
-	"license": "MIT",
-	"supportUrl": "https://modula.dev/contact",
-	"privacyPolicyUrl": "https://modula.dev/privacy",
-	"termsOfServiceUrl": "https://modula.dev/terms",
-	"keywords": ["modula", "interactive-content", "education", "publishing"]
+  "name": "modula",
+  "version": "1.0.1",
+  "description": "Create and edit interactive lessons, stories, maps and exercises in chat. Review blocks in the editor and get complete HTML documents to present, reopen and publish wherever you choose.",
+  "author": {
+    "name": "Chialab"
+  },
+  "homepage": "https://modula.dev",
+  "license": "MIT",
+  "keywords": ["modula", "interactive-content", "education", "publishing"]
 }

@@ -3,7 +3,8 @@
 Create and edit interactive lessons, stories, maps and exercises in chat. Describe
 what you want to make and provide your text, images and data. Claude drafts the
 content with Modula blocks; review it, ask for changes or edit blocks visually in
-the Modula editor. Save your changes and download the complete HTML document from the editor. View it in a browser, reopen it in the Modula editor,
+the Modula editor. The editor saves your changes to a temporary draft as you work.
+Ask Claude to save the latest version in the conversation as a complete HTML document. View it in a browser, reopen it in the Modula editor,
 embed its content on your own website, or export a SCORM package for your LMS.
 
 ## What it contains
@@ -25,7 +26,10 @@ in this package, and Claude never sees your password.
 
 Claude sends to Modula only what a request needs: the text, data and Modula HTML
 documents you ask it to author, edit or export. Modula returns the generated
-HTML, scripts and packaging instructions. Modula keeps an encrypted working copy for seven days after its last use. Download the HTML file to keep a copy. Available block types and variants depend on your Modula
+files: the document, a page, a SCORM package, or fragments with the link of
+their script. Modula keeps only a temporary, encrypted working copy of a
+document, for a day after its last use: the file delivered to the conversation
+is the lasting copy, and publishing it anywhere is up to you. Available block types and variants depend on your Modula
 account. See the [privacy policy](https://modula.dev/privacy) and
 [terms](https://modula.dev/terms).
 
