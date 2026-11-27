@@ -1,6 +1,6 @@
 {
-  "name": "modula",
-  "version": "1.0.2",
+  "name": "modula-authoring",
+  "version": "1.0.3",
   "description": "Create and edit interactive lessons, stories, maps and exercises in chat. Review blocks in the editor and get complete HTML documents to present, reopen and publish wherever you choose.",
   "author": {
     "name": "Chialab"
